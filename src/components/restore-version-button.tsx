@@ -1,0 +1,67 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { RestoreIcon } from "@/components/ui/icons";
+import { useToast } from "@/components/ui/toast";
+import { restoreVersionAction } from "@/server/actions/blueprints";
+
+export function RestoreVersionButton({
+  blueprintId,
+  versionId,
+  versionNumber,
+  hasDraft = false,
+}: {
+  blueprintId: string;
+  versionId: string;
+  versionNumber: number;
+  hasDraft?: boolean;
+}) {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function run() {
+    setLoading(true);
+    const res = await restoreVersionAction(blueprintId, versionId);
+    setLoading(false);
+    setOpen(false);
+    if (res.ok) {
+      toast({
+        variant: "success",
+        title: `Restored v${res.data.versionNumber} into the editor`,
+        description: "Review it, then Save as new version to keep it.",
+      });
+      router.push(`/blueprints/${blueprintId}?restored=${res.data.versionNumber}`);
+      router.refresh();
+    } else {
+      toast({ variant: "error", title: "Couldn't restore", description: res.error });
+    }
+  }
+
+  return (
+    <>
+      <Button variant="primary" size="sm" onClick={() => setOpen(true)}>
+        <RestoreIcon size={15} />
+        Restore this version
+      </Button>
+      <ConfirmDialog
+        open={open}
+        onClose={() => setOpen(false)}
+        onConfirm={run}
+        loading={loading}
+        title={`Restore version ${versionNumber}?`}
+        description={
+          hasDraft
+            ? "This loads the snapshot into the editor as a draft and replaces your current unsaved draft changes. Your saved history is preserved; nothing is committed until you Save as new version."
+            : "This loads the snapshot into the editor as a draft for review. Your saved history is preserved; nothing is committed until you Save as new version."
+        }
+        confirmLabel="Restore into editor"
+        destructive={hasDraft}
+      />
+    </>
+  );
+}

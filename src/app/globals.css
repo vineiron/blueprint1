@@ -1,26 +1,275 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: toggling `.dark` on <html> flips every `dark:` utility. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * blueprint1 design tokens.
+ * Brand/UI accent = sky. Neutral base = slate. Blueprint-semantic tokens are
+ * separate from brand tokens (amber PK / violet FK / slate edges / sky hover).
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc; /* slate-50 */
+  --foreground: #0f172a; /* slate-900 */
+
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  --muted: #f1f5f9; /* slate-100 */
+  --muted-foreground: #64748b; /* slate-500 */
+
+  --accent: #e0f2fe; /* sky-100 */
+  --accent-foreground: #0c4a6e; /* sky-900 */
+
+  --primary: #0284c7; /* sky-600 */
+  --primary-foreground: #f8fafc;
+  --primary-hover: #0369a1; /* sky-700 */
+
+  --border: #e2e8f0; /* slate-200 */
+  --input: #e2e8f0;
+  --ring: #0284c7; /* sky-600 */
+
+  --destructive: #dc2626; /* red-600 — destructive text/accent (text-destructive, bg-destructive/10) */
+  --destructive-solid: #dc2626; /* red-600 — solid destructive button bg */
+  --destructive-solid-foreground: #f8fafc; /* near-white text on the solid button */
+  --destructive-solid-hover: #b91c1c; /* red-700 */
+
+  --success: #16a34a; /* green-600 */
+  --warning: #d97706; /* amber-600 */
+
+  /* Blueprint-semantic */
+  --blueprint-bg: #f8fafc;
+  --diagram-grid: #cbd5e1; /* slate-300 */
+  --pk: #d97706; /* amber-600 */
+  --fk: #7c3aed; /* violet-600 */
+  --edge: #94a3b8; /* slate-400 */
+  --edge-highlight: #0284c7; /* sky-600 */
+  --node-header: #0284c7;
+  --node-header-foreground: #f8fafc;
+
+  /* SQL syntax highlight — mirrors the CodeMirror editor's themed highlighting,
+     consumed by the static code preview on the marketing page. */
+  --sql-keyword: #770088;
+  --sql-type: #008855;
+  --sql-string: #aa1111;
+
+  --radius: 0.625rem;
 }
 
+.dark {
+  --background: #020617; /* slate-950 */
+  --foreground: #e2e8f0; /* slate-200 */
+
+  --card: #0f172a; /* slate-900 */
+  --card-foreground: #e2e8f0;
+
+  --popover: #0f172a;
+  --popover-foreground: #e2e8f0;
+
+  --muted: #1e293b; /* slate-800 */
+  --muted-foreground: #94a3b8; /* slate-400 */
+
+  --accent: #0c4a6e; /* sky-900 */
+  --accent-foreground: #e0f2fe; /* sky-100 */
+
+  --primary: #38bdf8; /* sky-400 */
+  --primary-foreground: #082f49; /* sky-950 */
+  --primary-hover: #7dd3fc; /* sky-300 */
+
+  --border: #1e293b; /* slate-800 */
+  --input: #1e293b;
+  --ring: #38bdf8;
+
+  --destructive: #f87171; /* red-400 — destructive text/accent, stays bright on dark surfaces (~7:1) */
+  --destructive-solid: #dc2626; /* red-600 — solid button bg; white text → ~4.8:1 (WCAG AA) */
+  --destructive-solid-foreground: #f8fafc; /* near-white text on the solid button */
+  --destructive-solid-hover: #b91c1c; /* red-700 — white text → ~6.5:1 */
+
+  --success: #22c55e;
+  --warning: #f59e0b;
+
+  --blueprint-bg: #0b1220;
+  --diagram-grid: #1e293b; /* slate-800 */
+  --pk: #f59e0b; /* amber-500 */
+  --fk: #a78bfa; /* violet-400 */
+  --edge: #475569; /* slate-600 */
+  --edge-highlight: #38bdf8;
+  --node-header: #0369a1; /* sky-700 */
+  --node-header-foreground: #f0f9ff;
+
+  --sql-keyword: #c792ea; /* purple-300ish */
+  --sql-type: #4ec9b0; /* teal */
+  --sql-string: #ce9178; /* orange */
+}
+
+/* Expose tokens to Tailwind utilities (bg-background, text-primary, border-border, …). */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-solid: var(--destructive-solid);
+  --color-destructive-solid-foreground: var(--destructive-solid-foreground);
+  --color-destructive-solid-hover: var(--destructive-solid-hover);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-pk: var(--pk);
+  --color-fk: var(--fk);
+  --color-sql-keyword: var(--sql-keyword);
+  --color-sql-type: var(--sql-type);
+  --color-sql-string: var(--sql-string);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Account-menu dropdown entrance (ported from leveling0's UserChip). */
+  --animate-pop-in: pop-in 0.16s cubic-bezier(0.2, 0.9, 0.25, 1) both;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Pop-in: subtle rise + fade used by the account-menu dropdown. Honors the
+   reduced-motion reset below. */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Default border color, in @layer base so `border-*` utilities (border-primary,
+   border-transparent, …) can override it. Unlayered, this universal rule would
+   beat the utilities layer and force every border to --border. */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+}
+
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus ring used by interactive primitives. */
+@utility focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Blueprint grid motif — used on hero, empty states, and the ERD canvas. */
+.bg-diagram-grid {
+  background-color: var(--background);
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--diagram-grid) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--diagram-grid) 45%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ERD hover-highlight: dim the rest, spotlight the connected set. Kept readable
+   (not near-invisible) for contrast — the spotlight reads via the gap to 1.0. */
+.erd-dim {
+  opacity: 0.4;
+  transition: opacity 0.15s ease;
+}
+.erd-hi {
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+
+/* Auto-layout feature demo (AutoLayoutDemo on the landing page): the real ERD
+   canvas embedded display-only — pointer-events disabled so it never traps page
+   scroll, and the toolbar / zoom-control chrome hidden. The entrance auto-layout
+   animation, dot background, nodes, and edges still render. */
+.al-demo-canvas .react-flow {
+  pointer-events: none;
+}
+.al-demo-canvas .react-flow__panel,
+.al-demo-canvas .react-flow__controls {
+  display: none;
+}
+
+/* React Flow zoom controls (bottom-left). The library ships light-only defaults
+   (white buttons whose icons inherit the page text color), and its only framing
+   is a faint rgba(0,0,0,0.08) drop shadow — invisible on a dark canvas, so dark
+   mode lost the outlined "card" look light mode gets for free. Fix both: map the
+   button theming variables to our tokens, and give the container a real token
+   border + radius (clipping the buttons) so the cluster reads identically in
+   light and dark. */
+.react-flow__controls {
+  /* Divider/frame line. Plain --border is slate-800 on slate-900 buttons in dark
+     mode — adjacent shades, so the per-button separators vanish. Mixing the card
+     toward the foreground keeps equal contrast in both themes: a light-gray line
+     on white, a lighter-slate line on the dark buttons. */
+  --ctl-line: color-mix(in srgb, var(--card), var(--foreground) 15%);
+
+  --xy-controls-button-background-color: var(--card);
+  --xy-controls-button-background-color-hover: var(--muted);
+  --xy-controls-button-color: var(--foreground);
+  --xy-controls-button-color-hover: var(--foreground);
+  --xy-controls-button-border-color: var(--ctl-line);
+
+  overflow: hidden;
+  border: 1px solid var(--ctl-line);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.06);
+}
+
+/* Thin, themeable scrollbars. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
 }

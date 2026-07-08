@@ -146,11 +146,18 @@ export async function getBlueprintSummaries(userId: string): Promise<BlueprintSu
 export async function getBlueprintForEditor(
   id: string,
   userId: string,
-): Promise<{ blueprint: Blueprint; latestVersion: BlueprintVersion | null } | null> {
+): Promise<{
+  blueprint: Blueprint;
+  latestVersion: BlueprintVersion | null;
+  versions: VersionMeta[];
+} | null> {
   const blueprint = await getOwnedBlueprint(id, userId);
   if (!blueprint) return null;
-  const latestVersion = await getLatestVersion(id);
-  return { blueprint, latestVersion };
+  const [latestVersion, versions] = await Promise.all([
+    getLatestVersion(id),
+    getVersionMetasForBlueprint(id),
+  ]);
+  return { blueprint, latestVersion, versions };
 }
 
 export async function getBlueprintWithVersions(
@@ -159,6 +166,11 @@ export async function getBlueprintWithVersions(
 ): Promise<{ blueprint: Blueprint; versions: VersionMeta[] } | null> {
   const blueprint = await getOwnedBlueprint(id, userId);
   if (!blueprint) return null;
+  const versions = await getVersionMetasForBlueprint(id);
+  return { blueprint, versions };
+}
+
+async function getVersionMetasForBlueprint(id: string): Promise<VersionMeta[]> {
   const rows = await db
     .select({
       id: blueprintVersions.id,
@@ -171,7 +183,7 @@ export async function getBlueprintWithVersions(
     .where(eq(blueprintVersions.blueprintId, id))
     .orderBy(desc(blueprintVersions.versionNumber));
 
-  const versions: VersionMeta[] = rows.map((v) => ({
+  return rows.map((v) => ({
     id: v.id,
     versionNumber: v.versionNumber,
     note: v.note,
@@ -179,7 +191,6 @@ export async function getBlueprintWithVersions(
     tableCount: v.graph.tables.length,
     relationCount: v.graph.relations.length,
   }));
-  return { blueprint, versions };
 }
 
 export async function getOwnedVersion(

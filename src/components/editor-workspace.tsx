@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -36,6 +35,7 @@ import type { ExportImageFormat } from "@/components/erd/export-image";
 import { ShareDialog } from "@/components/share-dialog";
 import { TemplateGallery } from "@/components/template-gallery";
 import { useSignIn } from "@/components/sign-in-modal-provider";
+import { VersionHistorySheet } from "@/components/version-history-sheet";
 import { parseSql } from "@/lib/sql/parser";
 import type { ErdModel, NodePositions } from "@/lib/sql/types";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -48,6 +48,7 @@ import {
   saveDraftAction,
   updateMetaAction,
 } from "@/server/actions/blueprints";
+import type { VersionMeta } from "@/server/data/blueprints";
 import { Group, Panel, Separator, useDefaultLayout } from "react-resizable-panels";
 
 // Heavy client-only chunks: load on the editor route with sized skeletons (H11).
@@ -93,6 +94,7 @@ type EditorWorkspaceProps = CommonProps &
         draftUpdatedAt: string | null;
         isPublic: boolean;
         publicSlug: string | null;
+        versions: VersionMeta[];
         restoredFrom?: number | null;
       }
   );
@@ -187,6 +189,7 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
   const [discardOpen, setDiscardOpen] = useState(false);
   const [discarding, setDiscarding] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [exportRequest, setExportRequest] = useState<{
     id: number;
@@ -665,14 +668,15 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
             </Button>
           ) : (
             <>
-              <Link
-                href={`/blueprints/${blueprintId}/versions`}
+              <button
+                type="button"
+                onClick={() => setHistoryOpen(true)}
                 aria-label="Version history"
                 className="focus-ring inline-flex h-9 w-9 shrink-0 items-center justify-center gap-1.5 rounded-md border border-border bg-card px-0 text-sm font-medium hover:bg-muted lg:w-auto lg:px-3"
               >
                 <HistoryIcon size={16} />
                 <span className="hidden lg:inline">History</span>
-              </Link>
+              </button>
               <Button
                 onClick={() => setVersionDialogOpen(true)}
                 disabled={!canSaveVersion}
@@ -832,6 +836,17 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
           blueprintId={blueprintId}
           isPublic={isPublic}
           slug={publicSlug}
+        />
+      ) : null}
+
+      {isEdit ? (
+        <VersionHistorySheet
+          open={historyOpen}
+          onClose={() => setHistoryOpen(false)}
+          blueprintId={blueprintId}
+          blueprintTitle={title || props.initialTitle}
+          versions={props.versions}
+          hasDraft={draftUpdatedAt != null}
         />
       ) : null}
 

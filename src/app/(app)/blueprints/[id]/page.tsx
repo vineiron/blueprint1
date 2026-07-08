@@ -16,7 +16,7 @@ export default async function BlueprintPage({
   const result = await getBlueprintForEditor(id, userId);
   if (!result) notFound();
 
-  const { blueprint, latestVersion } = result;
+  const { blueprint, latestVersion, versions } = result;
   const latestSql = latestVersion?.sql ?? "";
   const latestPositions = latestVersion?.positions ?? {};
   const hasDraft = blueprint.draftSql != null;
@@ -36,6 +36,7 @@ export default async function BlueprintPage({
         draftUpdatedAt={blueprint.draftUpdatedAt ? blueprint.draftUpdatedAt.toISOString() : null}
         isPublic={blueprint.isPublic}
         publicSlug={blueprint.publicSlug}
+        versions={versions}
         restoredFrom={restoredFrom != null && Number.isFinite(restoredFrom) ? restoredFrom : null}
       />
     </div>

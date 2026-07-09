@@ -4,7 +4,21 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { GoogleIcon } from "@/components/ui/icons";
+import { SITE_URL } from "@/lib/env";
 import { createClient } from "@/lib/supabase/client";
+
+function getOAuthOrigin() {
+  const configuredOrigin = new URL(SITE_URL).origin;
+  const isLocalConfiguredOrigin =
+    configuredOrigin.startsWith("http://localhost") ||
+    configuredOrigin.startsWith("http://127.0.0.1");
+
+  if (process.env.NODE_ENV === "production" && !isLocalConfiguredOrigin) {
+    return configuredOrigin;
+  }
+
+  return window.location.origin;
+}
 
 /**
  * Sign-in popup (replaces the old dedicated /signin page). The OAuth call runs
@@ -29,7 +43,7 @@ export function SignInModal({
     setError(false);
     const supabase = createClient();
     const safeNext = next && next.startsWith("/") ? next : "/dashboard";
-    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNext)}`;
+    const redirectTo = `${getOAuthOrigin()}/auth/callback?next=${encodeURIComponent(safeNext)}`;
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo },

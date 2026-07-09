@@ -10,6 +10,7 @@ import {
 } from "@/db/schema";
 import type { ErdRelation, ErdTable, NodePositions } from "@/lib/sql/types";
 import { generateSlug } from "@/lib/utils";
+import { isUuid, isValidSlug } from "@/lib/validation";
 
 type Graph = { tables: ErdTable[]; relations: ErdRelation[] };
 
@@ -53,6 +54,7 @@ export interface VersionMeta {
 /* -------------------------------------------------------------------- reads */
 
 export async function getLatestVersion(blueprintId: string): Promise<BlueprintVersion | null> {
+  if (!isUuid(blueprintId)) return null;
   const [row] = await db
     .select()
     .from(blueprintVersions)
@@ -66,6 +68,7 @@ export async function getOwnedBlueprint(
   id: string,
   userId: string,
 ): Promise<Blueprint | null> {
+  if (!isUuid(id) || !isUuid(userId)) return null;
   const [row] = await db
     .select()
     .from(blueprints)
@@ -94,6 +97,7 @@ function buildThumb(graph: Graph, positions: NodePositions): BlueprintThumb {
  * derived counts/names/thumbnail mini reach the client.
  */
 export async function getBlueprintSummaries(userId: string): Promise<BlueprintSummary[]> {
+  if (!isUuid(userId)) return [];
   const rows = await db
     .select()
     .from(blueprints)
@@ -195,6 +199,7 @@ export async function getOwnedVersion(
   versionId: string,
   userId: string,
 ): Promise<{ blueprint: Blueprint; version: BlueprintVersion } | null> {
+  if (!isUuid(blueprintId) || !isUuid(versionId) || !isUuid(userId)) return null;
   const blueprint = await getOwnedBlueprint(blueprintId, userId);
   if (!blueprint) return null;
   const [version] = await db
@@ -221,6 +226,7 @@ export interface PublicBlueprint {
  */
 export const getPublicBlueprint = cache(
   async (slug: string): Promise<PublicBlueprint | null> => {
+    if (!isValidSlug(slug)) return null;
     const [row] = await db
       .select({
         id: blueprints.id,
@@ -255,6 +261,7 @@ export async function createBlueprint(input: {
   graph: Graph;
   positions: NodePositions;
 }): Promise<Blueprint> {
+  if (!isUuid(input.ownerId)) throw new Error("Invalid owner.");
   return db.transaction(async (tx) => {
     const [blueprint] = await tx
       .insert(blueprints)
@@ -280,6 +287,7 @@ export async function updateDraft(
   userId: string,
   draft: { sql: string; positions: NodePositions },
 ): Promise<boolean> {
+  if (!isUuid(id) || !isUuid(userId)) return false;
   const rows = await db
     .update(blueprints)
     .set({
@@ -293,6 +301,7 @@ export async function updateDraft(
 }
 
 export async function discardDraft(id: string, userId: string): Promise<boolean> {
+  if (!isUuid(id) || !isUuid(userId)) return false;
   const rows = await db
     .update(blueprints)
     .set({ draftSql: null, draftPositions: null, draftUpdatedAt: null })
@@ -306,6 +315,7 @@ export async function saveAsNewVersion(
   userId: string,
   input: { sql: string; graph: Graph; positions: NodePositions; note: string },
 ): Promise<BlueprintVersion> {
+  if (!isUuid(id) || !isUuid(userId)) throw new Error("Blueprint not found or not authorized.");
   return db.transaction(async (tx) => {
     const [blueprint] = await tx
       .select({ id: blueprints.id })
@@ -350,6 +360,9 @@ export async function restoreVersionToDraft(
   userId: string,
   versionId: string,
 ): Promise<void> {
+  if (!isUuid(id) || !isUuid(userId) || !isUuid(versionId)) {
+    throw new Error("Blueprint not found or not authorized.");
+  }
   return db.transaction(async (tx) => {
     const [blueprint] = await tx
       .select({ id: blueprints.id })
@@ -384,6 +397,7 @@ export async function setVisibility(
   userId: string,
   isPublic: boolean,
 ): Promise<{ isPublic: boolean; publicSlug: string | null } | null> {
+  if (!isUuid(id) || !isUuid(userId)) return null;
   const blueprint = await getOwnedBlueprint(id, userId);
   if (!blueprint) return null;
 
@@ -424,6 +438,7 @@ export async function updateBlueprintMeta(
   userId: string,
   patch: { title?: string },
 ): Promise<boolean> {
+  if (!isUuid(id) || !isUuid(userId)) return false;
   const rows = await db
     .update(blueprints)
     .set(patch)
@@ -433,6 +448,7 @@ export async function updateBlueprintMeta(
 }
 
 export async function deleteBlueprint(id: string, userId: string): Promise<boolean> {
+  if (!isUuid(id) || !isUuid(userId)) return false;
   const rows = await db
     .delete(blueprints)
     .where(and(eq(blueprints.id, id), eq(blueprints.ownerId, userId)))

@@ -4,6 +4,12 @@ Turn PostgreSQL DDL into interactive, versioned, shareable entity-relationship b
 
 Paste `CREATE TABLE` statements → get a pan/zoom ERD with hover-highlighting and one-click auto-layout. Sign in with Google to save blueprints, keep a version history, and publish read-only share links.
 
+## Project status
+
+blueprint1 is an early project. The core SQL-to-ERD flow works, but APIs,
+deployment assumptions, and contribution guidelines may change as the project
+matures.
+
 ## Stack
 
 - **Next.js 16** (App Router, React 19, React Compiler) · TypeScript · Tailwind v4 · Biome
@@ -13,23 +19,28 @@ Paste `CREATE TABLE` statements → get a pan/zoom ERD with hover-highlighting a
 
 ## 1. Environment
 
-Set these in `.env` (already present in this project):
+Copy the example environment file, then replace the placeholders with your own project values:
 
+```bash
+cp .env.example .env
 ```
+
+```dotenv
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...   # the new publishable key (replaces anon)
 DATABASE_URL=...                            # Postgres connection string
+DIRECT_URL=...                              # Session/direct URL for migrations
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 > For serverless deploys use the Supabase **transaction pooler** URL (port 6543) — `{ prepare: false }` is already set. Run **migrations** against the **direct/session** URL (port 5432).
 
+Never commit `.env` or production secrets. This app intentionally does not use `SUPABASE_SERVICE_ROLE_KEY`; adding one increases leak risk and is unnecessary for the current architecture.
+
 ## 2. Install dependencies
 
-These libraries are required and must be declared in `package.json`:
-
 ```bash
-pnpm add @supabase/ssr@0.12.0 @supabase/supabase-js@2.108.1 drizzle-orm@0.45.2 postgres@3.4.9 pgsql-ast-parser@12.0.2 @xyflow/react@12.11.0 elkjs
-pnpm add -D drizzle-kit@0.31.10
+pnpm install
 ```
 
 ## 3. Database migration
@@ -49,7 +60,19 @@ pnpm drizzle-kit migrate
 3. **Supabase dashboard → Authentication → URL Configuration**: set the Site URL (e.g. `http://localhost:3000`) and add redirect URLs:
    `http://localhost:3000/auth/callback` (and your production `https://…/auth/callback`).
 
-## 5. Run
+## 5. Deployment notes
+
+- Set every variable from `.env.example` in your deployment platform.
+- Set `NEXT_PUBLIC_SITE_URL` to the exact production origin, for example
+  `https://example.com`. The OAuth callback uses this value for production
+  redirects.
+- Use the Supabase transaction pooler URL for production `DATABASE_URL`.
+- Use `DIRECT_URL` only for Drizzle migrations and generation.
+- Add your production callback URL in Supabase:
+  `https://your-domain.com/auth/callback`.
+- Do not add `SUPABASE_SERVICE_ROLE_KEY`; this app does not need it.
+
+## 6. Run
 
 ```bash
 pnpm dev
@@ -69,14 +92,9 @@ pnpm exec tsc --noEmit
 - **Source of truth = SQL**. The committed `graph` per version is produced by the server **re-parsing** the SQL (the client parse is for live preview only); manual node positions are merged in.
 - **Auto-layout (ELK)**: pasted DDL has no coordinates, so the canvas runs **elkjs** (`layered` + orthogonal edge routing, with per-column ports) to place tables and route relationships *around* them. It runs automatically when a table has no saved position and on demand via the **Auto layout** button; manual positions are otherwise preserved. Routed edge paths are recomputed on each auto-layout and revert to live curves while dragging.
 
-## Documented decisions
+## Security notes
 
-See `docs/DECISIONS.md` for the full decision register (93 decisions, all options + reasoning).
-
-## Optional upgrades
-
-The UI primitives, toasts, icons, and SQL editor are hand-rolled to keep the dependency surface minimal and the app runnable out of the box. To upgrade:
-
-- **Syntax-highlighted SQL editor** (CodeMirror): `pnpm add @uiw/react-codemirror @codemirror/lang-sql` — then swap the textarea in `src/components/sql-editor.tsx`.
-- **Accessible primitives** (Radix): `pnpm add @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-tooltip`.
-- **Icons / toasts / schema validation**: `pnpm add lucide-react sonner zod`.
+- Pasted SQL is parsed and visualized only; it is not executed.
+- Saved blueprints are private by default. Public links use opaque slugs and expose only the latest saved version.
+- Authorization is enforced in server code because Drizzle connects directly to Postgres and bypasses Supabase RLS.
+- See `SECURITY.md` for responsible vulnerability reporting.

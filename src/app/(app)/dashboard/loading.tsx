@@ -1,3 +1,53 @@
+function SkeletonBlock({ className }: { className: string }) {
+  return <div className={`animate-pulse bg-muted ${className}`} />;
+}
+
+const FILTER_CHIP_SKELETONS = [
+  { key: "all", width: "w-16" },
+  { key: "public", width: "w-20" },
+  { key: "private", width: "w-20" },
+  { key: "draft", width: "w-24" },
+];
+
+const CARD_SKELETONS = ["card-1", "card-2", "card-3", "card-4", "card-5"];
+
+function NewBlueprintSkeleton() {
+  return (
+    <div className="flex min-h-[200px] flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-primary text-primary">
+      <SkeletonBlock className="h-[22px] w-[22px] rounded-full" />
+      <SkeletonBlock className="h-5 w-24 rounded" />
+    </div>
+  );
+}
+
+function BlueprintCardSkeleton() {
+  return (
+    <div className="group relative rounded-lg border border-border bg-card p-3">
+      <SkeletonBlock className="mb-3 h-28 w-full overflow-hidden rounded-md border border-border" />
+
+      <div className="min-w-0 flex-1 pb-8">
+        <div className="flex items-center gap-2">
+          <SkeletonBlock className="h-5 w-2/3 rounded" />
+        </div>
+        <div className="mt-3 flex items-center gap-2">
+          <SkeletonBlock className="h-4 w-14 rounded" />
+          <SkeletonBlock className="h-1 w-1 rounded-full" />
+          <SkeletonBlock className="h-4 w-16 rounded" />
+        </div>
+      </div>
+
+      <div className="absolute bottom-2 left-3 z-10 flex flex-wrap items-center gap-1.5 pr-12">
+        <SkeletonBlock className="h-5 w-16 rounded-full" />
+        <SkeletonBlock className="h-5 w-12 rounded-full" />
+      </div>
+
+      <div className="absolute right-2 bottom-2 z-10">
+        <SkeletonBlock className="h-8 w-8 rounded-md" />
+      </div>
+    </div>
+  );
+}
+
 /** Skeleton mirroring the real dashboard (toolbar + card grid) so it streams without layout jump. */
 export default function DashboardLoading() {
   return (
@@ -9,25 +59,24 @@ export default function DashboardLoading() {
       {/* Toolbar: title on the left, search + sort + view toggle + filter chips on the right. */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <div className="h-8 w-44 animate-pulse rounded-md bg-muted" />
+          <SkeletonBlock className="h-8 w-44 rounded-md" />
         </div>
         <div className="flex flex-col gap-3 sm:items-end">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-            <div className="h-9 w-full animate-pulse rounded-md bg-muted sm:w-64" />
+            <SkeletonBlock className="h-9 w-full rounded-md sm:w-64" />
             <div className="flex items-center gap-2">
-              <div className="h-9 w-full flex-1 animate-pulse rounded-md bg-muted sm:w-40 sm:flex-none" />
+              <SkeletonBlock className="h-9 w-full flex-1 rounded-md sm:w-40 sm:flex-none" />
               <div className="flex items-center gap-0.5 rounded-md border border-border p-0.5">
-                <div className="h-7 w-7 animate-pulse rounded bg-muted" />
-                <div className="h-7 w-7 animate-pulse rounded bg-muted" />
+                <SkeletonBlock className="h-7 w-7 rounded" />
+                <SkeletonBlock className="h-7 w-7 rounded" />
               </div>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-1.5 sm:justify-end">
-            {["w-16", "w-20", "w-20", "w-24"].map((w, i) => (
+            {FILTER_CHIP_SKELETONS.map((chip) => (
               <div
-                // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton placeholders
-                key={i}
-                className={`h-7 ${w} animate-pulse rounded-full bg-muted`}
+                key={chip.key}
+                className={`h-7 ${chip.width} animate-pulse rounded-full bg-muted`}
               />
             ))}
           </div>
@@ -36,23 +85,9 @@ export default function DashboardLoading() {
 
       {/* Grid: dashed "New blueprint" cell first, then card placeholders matching BlueprintCard. */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div className="flex min-h-[200px] flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border">
-          <div className="h-6 w-6 animate-pulse rounded-full bg-muted" />
-          <div className="h-3 w-24 animate-pulse rounded bg-muted" />
-        </div>
-        {Array.from({ length: 5 }, (_, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton placeholders
-          <div key={i} className="relative rounded-lg border border-border bg-card p-3">
-            <div className="absolute right-2 bottom-2 h-8 w-8 animate-pulse rounded-md bg-muted" />
-            <div className="mb-3 h-28 w-full animate-pulse rounded-md border border-border bg-muted" />
-            <div className="pb-8">
-              <div className="flex items-center gap-2">
-                <div className="h-5 w-2/3 animate-pulse rounded bg-muted" />
-                <div className="h-4 w-14 animate-pulse rounded-full bg-muted" />
-              </div>
-              <div className="mt-3 h-3 w-3/4 animate-pulse rounded bg-muted" />
-            </div>
-          </div>
+        <NewBlueprintSkeleton />
+        {CARD_SKELETONS.map((key) => (
+          <BlueprintCardSkeleton key={key} />
         ))}
       </div>
     </div>

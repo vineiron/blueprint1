@@ -8,10 +8,10 @@ export default async function BlueprintPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ restored?: string }>;
+  searchParams: Promise<{ restored?: string; history?: string }>;
 }) {
   const { id } = await params;
-  const { restored } = await searchParams;
+  const { restored, history } = await searchParams;
   const userId = await requireAuthUserId(`/blueprints/${id}`);
   const result = await getBlueprintForEditor(id, userId);
   if (!result) notFound();
@@ -38,6 +38,7 @@ export default async function BlueprintPage({
         publicSlug={blueprint.publicSlug}
         versions={versions}
         wasRestored={wasRestored}
+        initialHistoryOpen={history != null}
       />
     </div>
   );

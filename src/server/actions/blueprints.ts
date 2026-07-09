@@ -155,7 +155,7 @@ export async function restoreVersionAction(
     revalidatePath(`/blueprints/${id}/versions`);
     return ok(null);
   } catch {
-    return err("Couldn't restore that version.");
+    return err("Couldn't load that version as a draft.");
   }
 }
 

@@ -30,35 +30,36 @@ export function RestoreVersionButton({
     if (res.ok) {
       toast({
         variant: "success",
-        title: "Restored version into the editor",
+        title: "Loaded version as draft",
         description: "Review it, then Save as new version to keep it.",
       });
       router.push(`/blueprints/${blueprintId}?restored=1`);
       router.refresh();
     } else {
-      toast({ variant: "error", title: "Couldn't restore", description: res.error });
+      toast({ variant: "error", title: "Couldn't load draft", description: res.error });
     }
   }
 
   return (
     <>
-      <Button variant="primary" size="sm" onClick={() => setOpen(true)}>
+      <Button variant="outline" size="sm" className="h-8" onClick={() => setOpen(true)}>
         <RestoreIcon size={15} />
-        Restore this version
+        Load as draft
       </Button>
       <ConfirmDialog
         open={open}
         onClose={() => setOpen(false)}
         onConfirm={run}
         loading={loading}
-        title="Restore this version?"
+        title="Load this version as a draft?"
         description={
           hasDraft
             ? "This loads the snapshot into the editor as a draft and replaces your current unsaved draft changes. Your saved history is preserved; nothing is committed until you Save as new version."
             : "This loads the snapshot into the editor as a draft for review. Your saved history is preserved; nothing is committed until you Save as new version."
         }
-        confirmLabel="Restore into editor"
+        confirmLabel="Load as draft"
         destructive={hasDraft}
+        hideFooterBorder
       />
     </>
   );

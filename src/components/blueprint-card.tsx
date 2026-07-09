@@ -205,7 +205,7 @@ export function BlueprintCard({
           </DropdownItem>
           <DropdownItem
             icon={HistoryIcon}
-            onClick={() => router.push(`/blueprints/${d.id}/versions`)}
+            onClick={() => router.push(`/blueprints/${d.id}?history=1`)}
           >
             History
           </DropdownItem>
@@ -255,6 +255,7 @@ export function BlueprintCard({
         description="This permanently deletes the blueprint and all of its versions. This can't be undone."
         confirmLabel="Delete"
         destructive
+        hideFooterBorder
       />
     </div>
   );

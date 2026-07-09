@@ -96,6 +96,7 @@ type EditorWorkspaceProps = CommonProps &
         publicSlug: string | null;
         versions: VersionMeta[];
         wasRestored?: boolean;
+        initialHistoryOpen?: boolean;
       }
   );
 
@@ -189,7 +190,9 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
   const [discardOpen, setDiscardOpen] = useState(false);
   const [discarding, setDiscarding] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
-  const [historyOpen, setHistoryOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(
+    isEdit ? (props.initialHistoryOpen ?? false) : false,
+  );
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [exportRequest, setExportRequest] = useState<{
     id: number;
@@ -696,7 +699,7 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
         <div className="flex items-center gap-2 border-b border-border bg-primary/10 px-4 py-2 text-sm text-foreground">
           <SparklesIcon size={15} className="text-primary" />
           <span>
-            Restored as a draft. Review it, then “Save as new version” to keep it.
+            Loaded as a draft. Review it, then “Save as new version” to keep it.
           </span>
           <button
             type="button"
@@ -713,14 +716,16 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
           draft edits (shown as "Draft" on the dashboard). Mutually exclusive with
           the restored banner above (suppressed on restore loads). */}
       {showDraftBanner ? (
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 border-b border-border bg-warning/10 px-4 py-2 text-sm text-foreground">
-          <PencilIcon size={15} className="shrink-0 text-warning" />
-          <span>
-            You're editing an <strong>unsaved draft</strong>
-            {draftUpdatedAt ? <> · last edited {formatRelativeTime(draftUpdatedAt)}</> : null} — it
-            hasn't been saved as a version yet.
+        <div className="grid gap-2 border-b border-border bg-warning/10 px-4 py-2 text-sm text-foreground lg:flex lg:items-center">
+          <span className="flex min-w-0 items-start gap-2">
+            <PencilIcon size={15} className="mt-0.5 shrink-0 text-warning" />
+            <span className="min-w-0">
+              You're editing an <strong>unsaved draft</strong>
+              {draftUpdatedAt ? <> · last edited {formatRelativeTime(draftUpdatedAt)}</> : null} —
+              it hasn't been saved as a version yet.
+            </span>
           </span>
-          <div className="ml-auto flex items-center gap-1.5">
+          <div className="flex items-center justify-end gap-1.5 lg:ml-auto">
             <Button
               variant="outline"
               size="sm"
@@ -847,7 +852,6 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
           blueprintId={blueprintId}
           blueprintTitle={title || props.initialTitle}
           versions={props.versions}
-          hasDraft={draftUpdatedAt != null}
         />
       ) : null}
 

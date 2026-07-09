@@ -1,52 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { EyeIcon, RestoreIcon } from "@/components/ui/icons";
-import { useToast } from "@/components/ui/toast";
+import { EyeIcon } from "@/components/ui/icons";
 import { cn, formatDate } from "@/lib/utils";
-import { restoreVersionAction } from "@/server/actions/blueprints";
 import type { VersionMeta } from "@/server/data/blueprints";
 
 export function VersionTimeline({
   blueprintId,
   versions,
-  hasDraft = false,
 }: {
   blueprintId: string;
   versions: VersionMeta[];
-  hasDraft?: boolean;
 }) {
-  const router = useRouter();
-  const { toast } = useToast();
-  const [restoreId, setRestoreId] = useState<string | null>(null);
-  const [restoring, setRestoring] = useState(false);
-
-  const restoreTarget = versions.find((v) => v.id === restoreId) ?? null;
-
-  async function handleRestore() {
-    if (!restoreId) return;
-    setRestoring(true);
-    const res = await restoreVersionAction(blueprintId, restoreId);
-    setRestoring(false);
-    setRestoreId(null);
-    if (res.ok) {
-      toast({
-        variant: "success",
-        title: "Restored version into the editor",
-        description: "Review it, then Save as new version to keep it.",
-      });
-      router.push(`/blueprints/${blueprintId}?restored=1`);
-      router.refresh();
-    } else {
-      toast({ variant: "error", title: "Couldn't restore", description: res.error });
-    }
-  }
-
   return (
     <ol className="relative space-y-3 border-l border-border/80 pl-4">
       {versions.map((v, index) => {
@@ -84,22 +50,14 @@ export function VersionTimeline({
               <div className="mt-3 flex items-center gap-2">
                 {isCurrent ? <Badge variant="success">Current</Badge> : null}
                 <div className="ml-auto flex items-center gap-2">
-                  <Link
-                    href={`/blueprints/${blueprintId}/versions/${v.id}`}
-                    className="focus-ring inline-flex h-8 items-center gap-1.5 rounded-md border border-border px-3 text-sm font-medium hover:bg-muted"
-                  >
-                    <EyeIcon size={15} />
-                    View
-                  </Link>
                   {!isCurrent ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setRestoreId(v.id)}
+                    <Link
+                      href={`/blueprints/${blueprintId}/versions/${v.id}`}
+                      className="focus-ring inline-flex h-8 items-center gap-1.5 rounded-md border border-border px-3 text-sm font-medium hover:bg-muted"
                     >
-                      <RestoreIcon size={15} />
-                      Restore
-                    </Button>
+                      <EyeIcon size={15} />
+                      View
+                    </Link>
                   ) : null}
                 </div>
               </div>
@@ -107,21 +65,6 @@ export function VersionTimeline({
           </li>
         );
       })}
-
-      <ConfirmDialog
-        open={restoreId !== null}
-        onClose={() => setRestoreId(null)}
-        onConfirm={handleRestore}
-        loading={restoring}
-        title={restoreTarget ? "Restore this version?" : "Restore version?"}
-        description={
-          hasDraft
-            ? "This loads the snapshot into the editor as a draft and replaces your current unsaved draft changes. Your saved history is preserved; nothing is committed until you Save as new version."
-            : "This loads the snapshot into the editor as a draft for review. Your saved history is preserved; nothing is committed until you Save as new version."
-        }
-        confirmLabel="Restore into editor"
-        destructive={hasDraft}
-      />
     </ol>
   );
 }

@@ -12,15 +12,15 @@ export function VersionHistorySheet({
   blueprintId,
   blueprintTitle,
   versions,
-  hasDraft,
 }: {
   open: boolean;
   onClose: () => void;
   blueprintId: string;
   blueprintTitle: string;
   versions: VersionMeta[];
-  hasDraft: boolean;
 }) {
+  const hasOlderVersions = versions.length > 1;
+
   return (
     <Sheet
       open={open}
@@ -35,7 +35,14 @@ export function VersionHistorySheet({
           className="min-h-64 border-dashed bg-background/40"
         />
       ) : (
-        <VersionTimeline blueprintId={blueprintId} versions={versions} hasDraft={hasDraft} />
+        <div className="space-y-3">
+          {hasOlderVersions ? (
+            <p className="rounded-md border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+              Open an older version to review it. You can load it as a draft from the version view.
+            </p>
+          ) : null}
+          <VersionTimeline blueprintId={blueprintId} versions={versions} />
+        </div>
       )}
     </Sheet>
   );

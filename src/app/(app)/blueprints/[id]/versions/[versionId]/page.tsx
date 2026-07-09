@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BlueprintViewer } from "@/components/blueprint-viewer";
+import { ReadOnlyBlueprintWorkspace } from "@/components/read-only-blueprint-workspace";
 import { RestoreVersionButton } from "@/components/restore-version-button";
-import { SqlEditor } from "@/components/sql-editor";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeftIcon } from "@/components/ui/icons";
 import { requireAuthUserId } from "@/server/auth";
@@ -58,15 +57,11 @@ export default async function VersionViewPage({
         </div>
       ) : null}
 
-      <div className="grid min-h-0 flex-1 grid-rows-[40%_0.375rem_minmax(0,1fr)] md:grid-cols-[40%_0.375rem_minmax(0,1fr)] md:grid-rows-1">
-        <div className="min-h-0 min-w-0 p-2">
-          <SqlEditor value={version.sql} readOnly />
-        </div>
-        <div className="bg-border" aria-hidden />
-        <div className="relative min-h-0 flex-1">
-          <BlueprintViewer model={version.graph} positions={version.positions ?? {}} />
-        </div>
-      </div>
+      <ReadOnlyBlueprintWorkspace
+        sql={version.sql}
+        model={version.graph}
+        positions={version.positions ?? {}}
+      />
     </div>
   );
 }

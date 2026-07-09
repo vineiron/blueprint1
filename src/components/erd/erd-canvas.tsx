@@ -77,6 +77,8 @@ interface ErdCanvasProps {
   autoLayoutFirst?: boolean;
   /** Hide the built-in export button when a parent toolbar owns that action. */
   hideExportControl?: boolean;
+  /** Allow one-off relayout without making the canvas editable. */
+  allowAutoLayout?: boolean;
   /** Parent-triggered export request; the canvas owns the rendered nodes. */
   exportRequest?: { id: number; format: "png" | "svg" } | null;
   onExportRequestHandled?: () => void;
@@ -98,6 +100,7 @@ function Flow({
   legendPlacement = "top-left",
   autoLayoutFirst = false,
   hideExportControl = false,
+  allowAutoLayout = false,
   exportRequest,
   onExportRequestHandled,
   onPositionsChange,
@@ -480,7 +483,7 @@ function Flow({
       </DropdownItem>
     </DropdownMenu>
   );
-  const autoLayoutButton = !readOnly ? (
+  const autoLayoutButton = !readOnly || allowAutoLayout ? (
     <Button
       size="sm"
       variant="outline"

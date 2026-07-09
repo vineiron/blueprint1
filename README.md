@@ -87,6 +87,7 @@ pnpm drizzle-kit migrate
 - Add your production callback URL in Supabase:
   `https://your-domain.com/auth/callback`.
 - Do not add `SUPABASE_SERVICE_ROLE_KEY`; this app does not need it.
+- See `DEPLOYMENT.md` for the full deployment guide.
 
 ## 6. Run
 

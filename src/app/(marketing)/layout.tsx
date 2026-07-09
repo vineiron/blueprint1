@@ -44,7 +44,7 @@ export default async function MarketingLayout({
       <div className="flex flex-1 flex-col">{children}</div>
       <footer className="border-t border-border px-4 py-6 text-sm text-muted-foreground sm:px-6">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
-          <p>© 2026 vineiron. All rights reserved.</p>
+          <p>© 2026 blueprint1 contributors. MIT licensed.</p>
           <nav aria-label="Footer links" className="flex items-center justify-center gap-4">
             <a
               href="https://vineiron.vercel.app/"
@@ -61,6 +61,14 @@ export default async function MarketingLayout({
               className="focus-ring rounded-sm hover:text-foreground"
             >
               github
+            </a>
+            <a
+              href="https://github.com/vineiron/blueprint1/blob/main/LICENSE"
+              target="_blank"
+              rel="noreferrer"
+              className="focus-ring rounded-sm hover:text-foreground"
+            >
+              license
             </a>
           </nav>
         </div>

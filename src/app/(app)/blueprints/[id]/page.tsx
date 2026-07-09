@@ -20,7 +20,7 @@ export default async function BlueprintPage({
   const latestSql = latestVersion?.sql ?? "";
   const latestPositions = latestVersion?.positions ?? {};
   const hasDraft = blueprint.draftSql != null;
-  const restoredFrom = restored ? Number.parseInt(restored, 10) : null;
+  const wasRestored = restored != null;
 
   return (
     <div className="h-full">
@@ -37,7 +37,7 @@ export default async function BlueprintPage({
         isPublic={blueprint.isPublic}
         publicSlug={blueprint.publicSlug}
         versions={versions}
-        restoredFrom={restoredFrom != null && Number.isFinite(restoredFrom) ? restoredFrom : null}
+        wasRestored={wasRestored}
       />
     </div>
   );

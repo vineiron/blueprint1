@@ -95,7 +95,7 @@ type EditorWorkspaceProps = CommonProps &
         isPublic: boolean;
         publicSlug: string | null;
         versions: VersionMeta[];
-        restoredFrom?: number | null;
+        wasRestored?: boolean;
       }
   );
 
@@ -145,7 +145,7 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
   const latestPositions = isEdit ? props.latestPositions : {};
   const isPublic = isEdit ? props.isPublic : false;
   const publicSlug = isEdit ? props.publicSlug : null;
-  const restoredFrom = isEdit ? (props.restoredFrom ?? null) : null;
+  const wasRestored = isEdit ? (props.wasRestored ?? false) : false;
   const isDraftInitial = isEdit ? props.isDraftInitial : false;
   const draftUpdatedAt = isEdit ? props.draftUpdatedAt : null;
 
@@ -165,12 +165,12 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
   const [status, setStatus] = useState<SaveStatus>(isDraftInitial ? "draft" : "idle");
   const [canvasKey, setCanvasKey] = useState(0);
   const [mobileTab, setMobileTab] = useState<"sql" | "erd">("sql");
-  const [showRestored, setShowRestored] = useState(restoredFrom != null);
+  const [showRestored, setShowRestored] = useState(wasRestored);
   // Resumed-draft notice: shown when the editor opens on a blueprint that has
   // uncommitted draft edits (the dashboard marks these "Draft"). Suppressed on
-  // restore loads — the "Restored from v{n}" banner already covers that case.
+  // restore loads — the restored banner already covers that case.
   const [showDraftBanner, setShowDraftBanner] = useState(
-    isDraftInitial && restoredFrom == null,
+    isDraftInitial && !wasRestored,
   );
 
   // Starter-schema insert state (create/try empty state). Remembers the
@@ -444,7 +444,7 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
       setShowRestored(false);
       setShowDraftBanner(false);
       noteForm.reset({ note: "" });
-      toast({ variant: "success", title: `Saved version ${res.data.versionNumber}` });
+      toast({ variant: "success", title: "Saved version" });
       router.refresh();
     } else {
       toast({ variant: "error", title: "Couldn't save version", description: res.error });
@@ -691,13 +691,12 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
         </div>
       </div>
 
-      {/* Restored-from banner (plan G5) */}
-      {showRestored && restoredFrom != null ? (
+      {/* Restored banner (plan G5) */}
+      {showRestored ? (
         <div className="flex items-center gap-2 border-b border-border bg-primary/10 px-4 py-2 text-sm text-foreground">
           <SparklesIcon size={15} className="text-primary" />
           <span>
-            Restored from <strong>v{restoredFrom}</strong> as a draft. Review it, then
-            “Save as new version” to keep it.
+            Restored as a draft. Review it, then “Save as new version” to keep it.
           </span>
           <button
             type="button"
@@ -797,13 +796,15 @@ export function EditorWorkspace(props: EditorWorkspaceProps) {
         }
       >
         <label className="mb-1.5 block text-sm font-medium" htmlFor="version-note">
-          Note <span className="text-muted-foreground">(optional)</span>
+          Note
         </label>
         <Textarea
           id="version-note"
           placeholder="What changed in this version?"
           rows={3}
           maxLength={LIMITS.noteMax}
+          required
+          aria-invalid={noteForm.formState.errors.note ? "true" : "false"}
           {...noteForm.register("note")}
         />
         {noteForm.formState.errors.note ? (

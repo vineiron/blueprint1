@@ -15,6 +15,13 @@
       "when": 1783547164541,
       "tag": "0001_remove_blueprint_description",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1783556321860,
+      "tag": "0002_remove_version_number",
+      "breakpoints": true
     }
   ]
 }

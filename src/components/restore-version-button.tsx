@@ -11,12 +11,10 @@ import { restoreVersionAction } from "@/server/actions/blueprints";
 export function RestoreVersionButton({
   blueprintId,
   versionId,
-  versionNumber,
   hasDraft = false,
 }: {
   blueprintId: string;
   versionId: string;
-  versionNumber: number;
   hasDraft?: boolean;
 }) {
   const router = useRouter();
@@ -32,10 +30,10 @@ export function RestoreVersionButton({
     if (res.ok) {
       toast({
         variant: "success",
-        title: `Restored v${res.data.versionNumber} into the editor`,
+        title: "Restored version into the editor",
         description: "Review it, then Save as new version to keep it.",
       });
-      router.push(`/blueprints/${blueprintId}?restored=${res.data.versionNumber}`);
+      router.push(`/blueprints/${blueprintId}?restored=1`);
       router.refresh();
     } else {
       toast({ variant: "error", title: "Couldn't restore", description: res.error });
@@ -53,7 +51,7 @@ export function RestoreVersionButton({
         onClose={() => setOpen(false)}
         onConfirm={run}
         loading={loading}
-        title={`Restore version ${versionNumber}?`}
+        title="Restore this version?"
         description={
           hasDraft
             ? "This loads the snapshot into the editor as a draft and replaces your current unsaved draft changes. Your saved history is preserved; nothing is committed until you Save as new version."

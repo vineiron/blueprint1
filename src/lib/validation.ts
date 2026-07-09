@@ -35,6 +35,7 @@ export const titleSchema = z
 export const noteSchema = z
   .string({ error: "Note must be text." })
   .trim()
+  .min(1, "Note is required.")
   .max(LIMITS.noteMax, `Note must be ${LIMITS.noteMax} characters or fewer.`);
 
 export const ddlSchema = z
@@ -53,7 +54,6 @@ export function validateDdl(input: unknown): Valid<string> {
 }
 
 export function validateNote(input: unknown): Valid<string> {
-  if (input == null) return { ok: true, value: "" };
   return run(noteSchema, input);
 }
 

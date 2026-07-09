@@ -35,9 +35,7 @@ export default async function VersionViewPage({
         </Link>
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <h1 className="truncate text-lg font-semibold">
-              {blueprint.title} · v{version.versionNumber}
-            </h1>
+            <h1 className="truncate text-lg font-semibold">{blueprint.title}</h1>
             {isCurrent ? <Badge variant="success">Current</Badge> : null}
           </div>
           <p className="truncate text-sm text-muted-foreground">
@@ -49,7 +47,6 @@ export default async function VersionViewPage({
             <RestoreVersionButton
               blueprintId={id}
               versionId={version.id}
-              versionNumber={version.versionNumber}
               hasDraft={blueprint.draftUpdatedAt != null}
             />
           </div>

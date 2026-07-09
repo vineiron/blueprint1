@@ -2,12 +2,10 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
-  integer,
   jsonb,
   pgTable,
   text,
   timestamp,
-  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 import type { ErdRelation, ErdTable, NodePositions } from "@/lib/sql/types";
@@ -45,7 +43,6 @@ export const blueprintVersions = pgTable(
     blueprintId: uuid("blueprint_id")
       .notNull()
       .references(() => blueprints.id, { onDelete: "cascade" }),
-    versionNumber: integer("version_number").notNull(),
     sql: text("sql").notNull(),
     // Authoritative parsed model (server-computed at commit time).
     graph: jsonb("graph")
@@ -57,8 +54,8 @@ export const blueprintVersions = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
-    uniqueIndex("blueprint_versions_blueprint_version_uq").on(t.blueprintId, t.versionNumber),
     index("blueprint_versions_blueprint_idx").on(t.blueprintId),
+    index("blueprint_versions_blueprint_created_idx").on(t.blueprintId, t.createdAt),
   ],
 );
 

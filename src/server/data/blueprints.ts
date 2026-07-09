@@ -1,5 +1,5 @@
 import "server-only";
-import { and, count, desc, eq, inArray, max } from "drizzle-orm";
+import { and, count, desc, eq, inArray } from "drizzle-orm";
 import { cache } from "react";
 import { db } from "@/db";
 import {
@@ -44,7 +44,6 @@ export interface BlueprintSummary {
 
 export interface VersionMeta {
   id: string;
-  versionNumber: number;
   note: string | null;
   createdAt: Date;
   tableCount: number;
@@ -58,7 +57,7 @@ export async function getLatestVersion(blueprintId: string): Promise<BlueprintVe
     .select()
     .from(blueprintVersions)
     .where(eq(blueprintVersions.blueprintId, blueprintId))
-    .orderBy(desc(blueprintVersions.versionNumber))
+    .orderBy(desc(blueprintVersions.createdAt))
     .limit(1);
   return row ?? null;
 }
@@ -113,7 +112,7 @@ export async function getBlueprintSummaries(userId: string): Promise<BlueprintSu
     })
     .from(blueprintVersions)
     .where(inArray(blueprintVersions.blueprintId, ids))
-    .orderBy(blueprintVersions.blueprintId, desc(blueprintVersions.versionNumber));
+    .orderBy(blueprintVersions.blueprintId, desc(blueprintVersions.createdAt));
   const latestById = new Map(latestRows.map((v) => [v.blueprintId, v]));
 
   const countRows = await db
@@ -174,18 +173,16 @@ async function getVersionMetasForBlueprint(id: string): Promise<VersionMeta[]> {
   const rows = await db
     .select({
       id: blueprintVersions.id,
-      versionNumber: blueprintVersions.versionNumber,
       note: blueprintVersions.note,
       createdAt: blueprintVersions.createdAt,
       graph: blueprintVersions.graph,
     })
     .from(blueprintVersions)
     .where(eq(blueprintVersions.blueprintId, id))
-    .orderBy(desc(blueprintVersions.versionNumber));
+    .orderBy(desc(blueprintVersions.createdAt));
 
   return rows.map((v) => ({
     id: v.id,
-    versionNumber: v.versionNumber,
     note: v.note,
     createdAt: v.createdAt,
     tableCount: v.graph.tables.length,
@@ -268,7 +265,6 @@ export async function createBlueprint(input: {
       .returning();
     await tx.insert(blueprintVersions).values({
       blueprintId: blueprint.id,
-      versionNumber: 1,
       sql: input.sql,
       graph: input.graph,
       positions: input.positions,
@@ -308,7 +304,7 @@ export async function discardDraft(id: string, userId: string): Promise<boolean>
 export async function saveAsNewVersion(
   id: string,
   userId: string,
-  input: { sql: string; graph: Graph; positions: NodePositions; note: string | null },
+  input: { sql: string; graph: Graph; positions: NodePositions; note: string },
 ): Promise<BlueprintVersion> {
   return db.transaction(async (tx) => {
     const [blueprint] = await tx
@@ -318,17 +314,10 @@ export async function saveAsNewVersion(
       .limit(1);
     if (!blueprint) throw new Error("Blueprint not found or not authorized.");
 
-    const [agg] = await tx
-      .select({ latest: max(blueprintVersions.versionNumber) })
-      .from(blueprintVersions)
-      .where(eq(blueprintVersions.blueprintId, id));
-    const nextNumber = (agg?.latest ?? 0) + 1;
-
     const [version] = await tx
       .insert(blueprintVersions)
       .values({
         blueprintId: id,
-        versionNumber: nextNumber,
         sql: input.sql,
         graph: input.graph,
         positions: input.positions,
@@ -354,13 +343,13 @@ export async function saveAsNewVersion(
  * Restore copy-forward THROUGH the draft (non-destructive): copy the selected
  * version's sql+positions into the blueprint's draft slot so the editor opens
  * with it for review. Nothing is committed until the user "Saves as new version",
- * so history stays immutable. Returns the source version number (for the banner).
+ * so history stays immutable.
  */
 export async function restoreVersionToDraft(
   id: string,
   userId: string,
   versionId: string,
-): Promise<{ versionNumber: number }> {
+): Promise<void> {
   return db.transaction(async (tx) => {
     const [blueprint] = await tx
       .select({ id: blueprints.id })
@@ -386,7 +375,7 @@ export async function restoreVersionToDraft(
       })
       .where(eq(blueprints.id, id));
 
-    return { versionNumber: source.versionNumber };
+    return undefined;
   });
 }
 

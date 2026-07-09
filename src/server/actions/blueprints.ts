@@ -95,8 +95,8 @@ export async function saveDraftAction(
 
 export async function saveAsNewVersionAction(
   id: string,
-  input: { sql: string; positions?: NodePositions; note?: string },
-): Promise<ActionResult<{ versionNumber: number }>> {
+  input: { sql: string; positions?: NodePositions; note: string },
+): Promise<ActionResult<null>> {
   const userId = await getUserId();
   if (!userId) return err("You must be signed in.");
 
@@ -113,16 +113,16 @@ export async function saveAsNewVersionAction(
   if (!size.ok) return err(size.error);
 
   try {
-    const version = await data.saveAsNewVersion(id, userId, {
+    await data.saveAsNewVersion(id, userId, {
       sql: ddl.value,
       graph: { tables: parsed.model.tables, relations: parsed.model.relations },
       positions: safePositions(input.positions),
-      note: note.value || null,
+      note: note.value,
     });
     revalidatePath(`/blueprints/${id}`);
     revalidatePath(`/blueprints/${id}/versions`);
     revalidatePath("/dashboard");
-    return ok({ versionNumber: version.versionNumber });
+    return ok(null);
   } catch {
     return err("Couldn't save the version.");
   }
@@ -144,16 +144,16 @@ export async function discardDraftAction(id: string): Promise<ActionResult<null>
 export async function restoreVersionAction(
   id: string,
   versionId: string,
-): Promise<ActionResult<{ versionNumber: number }>> {
+): Promise<ActionResult<null>> {
   const userId = await getUserId();
   if (!userId) return err("You must be signed in.");
   try {
     // Copy-forward THROUGH the draft: the editor opens with the restored content
     // for review; nothing is committed until the user Saves as a new version.
-    const result = await data.restoreVersionToDraft(id, userId, versionId);
+    await data.restoreVersionToDraft(id, userId, versionId);
     revalidatePath(`/blueprints/${id}`);
     revalidatePath(`/blueprints/${id}/versions`);
-    return ok({ versionNumber: result.versionNumber });
+    return ok(null);
   } catch {
     return err("Couldn't restore that version.");
   }

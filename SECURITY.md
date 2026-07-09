@@ -38,4 +38,4 @@ Out of scope:
 - Drizzle uses a direct Postgres connection, so Supabase RLS is not the runtime security boundary. Owner checks in server data access code are required.
 - Public `/share/[slug]` pages should return only viewer-safe fields.
 
-See `SECURITY_MODEL.md` for the full security model.
+See `docs/SECURITY_MODEL.md` for the full security model.

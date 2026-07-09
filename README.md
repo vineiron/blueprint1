@@ -33,6 +33,13 @@ matures.
 - **Drizzle ORM** + `postgres-js` (direct connection — authorization is enforced in app code)
 - **pgsql-ast-parser** for SQL DDL parsing · **@xyflow/react** + **elkjs (ELK)** for the canvas and auto-layout
 
+## Documentation
+
+- `docs/ARCHITECTURE.md` - application boundaries, route layout, data flow, and key files.
+- `docs/DATABASE.md` - database schema, ownership model, migrations, and validation limits.
+- `docs/DEPLOYMENT.md` - production environment, Supabase OAuth, and migration setup.
+- `docs/SECURITY_MODEL.md` - trust boundaries, data visibility, and known security gaps.
+
 ## 1. Environment
 
 Copy the example environment file, then replace the placeholders with your own project values:
@@ -87,7 +94,7 @@ pnpm drizzle-kit migrate
 - Add your production callback URL in Supabase:
   `https://your-domain.com/auth/callback`.
 - Do not add `SUPABASE_SERVICE_ROLE_KEY`; this app does not need it.
-- See `DEPLOYMENT.md` for the full deployment guide.
+- See `docs/DEPLOYMENT.md` for the full deployment guide.
 
 ## 6. Run
 
@@ -114,7 +121,7 @@ pnpm exec tsc --noEmit
 - Pasted SQL is parsed and visualized only; it is not executed.
 - Saved blueprints are private by default. Public links use opaque slugs and expose only the latest saved version.
 - Authorization is enforced in server code because Drizzle connects directly to Postgres and bypasses Supabase RLS.
-- See `SECURITY_MODEL.md` for the app's trust boundaries and data visibility rules.
+- See `docs/SECURITY_MODEL.md` for the app's trust boundaries and data visibility rules.
 - See `SECURITY.md` for responsible vulnerability reporting.
 
 ## Known limitations

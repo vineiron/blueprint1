@@ -42,4 +42,4 @@ yarn-error.log*
 next-env.d.ts
 
 # internal planning docs
-/docs
+/docs-internal

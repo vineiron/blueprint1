@@ -4,6 +4,22 @@ Turn PostgreSQL DDL into interactive, versioned, shareable entity-relationship b
 
 Paste `CREATE TABLE` statements → get a pan/zoom ERD with hover-highlighting and one-click auto-layout. Sign in with Google to save blueprints, keep a version history, and publish read-only share links.
 
+## Screenshots
+
+### Editor workspace
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screenshots/editor-dark.png">
+  <img alt="blueprint1 editor workspace showing PostgreSQL DDL beside an interactive ERD canvas" src=".github/assets/screenshots/editor-light.png">
+</picture>
+
+### Public share page
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screenshots/public-share-dark.png">
+  <img alt="blueprint1 public share page showing a read-only SQL schema and ERD" src=".github/assets/screenshots/public-share-light.png">
+</picture>
+
 ## Project status
 
 blueprint1 is an early project. The core SQL-to-ERD flow works, but APIs,

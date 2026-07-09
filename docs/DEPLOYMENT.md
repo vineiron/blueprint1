@@ -126,4 +126,4 @@ pnpm exec tsc --noEmit
 
 ## Security Notes
 
-See `SECURITY_MODEL.md` for trust boundaries and authorization details.
+See `docs/SECURITY_MODEL.md` for trust boundaries and authorization details.

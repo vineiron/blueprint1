@@ -99,13 +99,18 @@ would increase secret leak risk and is unnecessary for the current architecture.
 - Public share slugs are validated before database access.
 - OAuth callback redirects use configured site origin in production.
 - Server Action request body size is capped.
-- Baseline security headers are configured in `next.config.ts`.
-- GitHub secret scanning, Dependabot alerts, private vulnerability reporting,
-  and CodeQL scanning are enabled or configured for the public repository.
+- Baseline security headers and an enforced Content Security Policy are
+  configured in `next.config.ts`.
+- GitHub secret scanning, Dependabot alerts, Dependabot version updates,
+  private vulnerability reporting, CodeQL scanning, and dependency audit
+  workflows are enabled or configured for the public repository.
+- Authorization and public share behavior have focused automated tests around
+  the server data access layer.
 
 ## Known Gaps
 
 - Dedicated rate limiting is not implemented yet.
-- A strict Content Security Policy is not configured yet.
+- CSP should still be validated against the real deployed OAuth and Supabase
+  flow before treating it as final.
 - Supabase RLS is not configured as defense-in-depth yet.
-- Automated tests for authorization and public sharing should be expanded.
+- Automated tests for Server Actions and full route behavior should be expanded.

@@ -131,7 +131,7 @@ Important files:
 - `src/server/auth.ts` reads the Supabase user from the server session.
 - `src/server/actions/blueprints.ts` authenticates every mutation.
 - `src/server/data/blueprints.ts` applies owner checks around database access.
-- `SECURITY_MODEL.md` documents trust boundaries and known gaps.
+- `docs/SECURITY_MODEL.md` documents trust boundaries and known gaps.
 
 ## SQL Parsing And Graph Rendering
 
@@ -155,8 +155,8 @@ are parsed in `src/lib/env.server.ts`, which imports `server-only` so database
 secrets cannot be pulled into a client bundle.
 
 Runtime database connections use `DATABASE_URL`. Drizzle generation and
-migrations should use `DIRECT_URL` when available. See `DEPLOYMENT.md` for the
-full deployment guide.
+migrations should use `DIRECT_URL` when available. See `docs/DEPLOYMENT.md`
+for the full deployment guide.
 
 ## Key Files
 
@@ -169,4 +169,3 @@ full deployment guide.
 - `src/db/schema.ts` - Drizzle schema for persisted blueprint data.
 - `src/db/index.ts` - Postgres client and Drizzle instance.
 - `src/proxy.ts` - Supabase session refresh and optimistic auth redirects.
-

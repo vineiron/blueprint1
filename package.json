@@ -46,7 +46,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "drizzle-kit": "^0.31.10",
     "tailwindcss": "^4",
-    "typescript": "^7",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.10"
   },
   "pnpm": {

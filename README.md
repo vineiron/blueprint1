@@ -113,6 +113,7 @@ pnpm exec tsc --noEmit
 - Pasted SQL is parsed and visualized only; it is not executed.
 - Saved blueprints are private by default. Public links use opaque slugs and expose only the latest saved version.
 - Authorization is enforced in server code because Drizzle connects directly to Postgres and bypasses Supabase RLS.
+- See `SECURITY_MODEL.md` for the app's trust boundaries and data visibility rules.
 - See `SECURITY.md` for responsible vulnerability reporting.
 
 ## Known limitations

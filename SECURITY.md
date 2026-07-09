@@ -37,3 +37,5 @@ Out of scope:
 - The app does not require `SUPABASE_SERVICE_ROLE_KEY`.
 - Drizzle uses a direct Postgres connection, so Supabase RLS is not the runtime security boundary. Owner checks in server data access code are required.
 - Public `/share/[slug]` pages should return only viewer-safe fields.
+
+See `SECURITY_MODEL.md` for the full security model.

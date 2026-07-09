@@ -18,7 +18,7 @@ export function AppHeader({ user }: { user: HeaderUser }) {
       <div
         className={cn(
           "flex h-14 w-full items-center gap-3 px-4",
-          isDashboard && "mx-auto max-w-6xl sm:px-6",
+          isDashboard && "mx-auto max-w-7xl sm:px-6",
         )}
       >
         <Link href="/">

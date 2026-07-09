@@ -98,3 +98,10 @@ pnpm exec tsc --noEmit
 - Saved blueprints are private by default. Public links use opaque slugs and expose only the latest saved version.
 - Authorization is enforced in server code because Drizzle connects directly to Postgres and bypasses Supabase RLS.
 - See `SECURITY.md` for responsible vulnerability reporting.
+
+## Known limitations
+
+- PostgreSQL DDL is the primary supported input.
+- Public share links are unlisted, but anyone with the link can view the latest saved version.
+- Dedicated rate limiting is not implemented yet.
+- Supabase RLS is not the runtime authorization boundary because the app uses a direct Postgres connection through Drizzle.

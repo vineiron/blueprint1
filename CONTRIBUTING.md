@@ -2,6 +2,9 @@
 
 Thanks for improving blueprint1.
 
+blueprint1 is early, so focused changes are easiest to review. For larger
+features, architecture changes, or broad UI changes, please open an issue first.
+
 ## Local Setup
 
 ```bash
@@ -16,8 +19,19 @@ Fill `.env` with your own Supabase and Postgres values before running the app.
 
 ```bash
 pnpm exec tsc --noEmit
-pnpm lint
 ```
+
+Run `pnpm lint` too when your change touches formatting-sensitive code or if a
+maintainer asks for it.
+
+## Pull Requests
+
+- Keep changes focused.
+- Do not mix unrelated fixes in one PR.
+- Include screenshots or a short video for UI changes.
+- Explain user-visible behavior changes.
+- Do not commit `.env`, database dumps, private keys, OAuth secrets, or logs
+  containing secrets.
 
 ## Database Changes
 

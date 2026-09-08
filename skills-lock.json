@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "htmltolink": {
+      "source": "vineiron/htmltolink-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "b0ffe428447e57a78125560b7adf2725c8d9c4c0ea05ebe6ba3aa628121128f0"
+    }
+  }
+}

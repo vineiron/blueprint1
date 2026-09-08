@@ -4,21 +4,31 @@ Turn PostgreSQL DDL into interactive, versioned, shareable entity-relationship b
 
 Paste `CREATE TABLE` statements → get a pan/zoom ERD with hover-highlighting and one-click auto-layout. Sign in with Google to save blueprints, keep a version history, and publish read-only share links.
 
+**Try it live, no sign-up:** [blueprint1-theta.vercel.app/try](https://blueprint1-theta.vercel.app/try)
+
+Start from a blank editor or a Blog, E-commerce, or SaaS template. Your work autosaves in the browser; sign in only when you want to save it to your account.
+
 ## Screenshots
+
+### Landing page
+
+<img alt="blueprint1 landing page with a live SQL-to-ERD preview and buttons to open the SQL playground or go to the dashboard (light theme)" src=".github/assets/screenshots/landing-light.png">
+<img alt="blueprint1 landing page with a live SQL-to-ERD preview and buttons to open the SQL playground or go to the dashboard (dark theme)" src=".github/assets/screenshots/landing-dark.png">
 
 ### Editor workspace
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screenshots/editor-dark.png">
-  <img alt="blueprint1 editor workspace showing PostgreSQL DDL beside an interactive ERD canvas" src=".github/assets/screenshots/editor-light.png">
-</picture>
+<img alt="blueprint1 editor showing PostgreSQL DDL beside an interactive ERD canvas with crow's-foot relationships, density toggle, and auto layout (light theme)" src=".github/assets/screenshots/editor-light.png">
+<img alt="blueprint1 editor showing PostgreSQL DDL beside an interactive ERD canvas with crow's-foot relationships, density toggle, and auto layout (dark theme)" src=".github/assets/screenshots/editor-dark.png">
+
+### Version history
+
+<img alt="blueprint1 version history panel listing saved versions with table and relationship counts and a View action (light theme)" src=".github/assets/screenshots/history-light.png">
+<img alt="blueprint1 version history panel listing saved versions with table and relationship counts and a View action (dark theme)" src=".github/assets/screenshots/history-dark.png">
 
 ### Public share page
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screenshots/public-share-dark.png">
-  <img alt="blueprint1 public share page showing a read-only SQL schema and ERD" src=".github/assets/screenshots/public-share-light.png">
-</picture>
+<img alt="blueprint1 public read-only share page showing the SQL schema, the ERD in full-detail mode, and a legend for keys and constraints (light theme)" src=".github/assets/screenshots/public-share-light.png">
+<img alt="blueprint1 public read-only share page showing the SQL schema, the ERD in full-detail mode, and a legend for keys and constraints (dark theme)" src=".github/assets/screenshots/public-share-dark.png">
 
 ## Project status
 

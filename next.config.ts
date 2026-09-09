@@ -14,6 +14,15 @@ function getOrigin(value: string | undefined): string | null {
 const supabaseOrigin = getOrigin(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const supabaseRealtimeOrigin = supabaseOrigin?.replace(/^http/, "ws");
 
+// PostHog is reverse-proxied under /ingest so the browser only talks to this
+// origin: the CSP stays 'self'-only and content blockers see nothing to block.
+// The assets host is the ingest host with "-assets" added, per PostHog's docs.
+const posthogHost = getOrigin(process.env.NEXT_PUBLIC_POSTHOG_HOST);
+const posthogAssetsHost = posthogHost?.replace(
+  ".i.posthog.com",
+  "-assets.i.posthog.com",
+);
+
 const cspDirectives = [
   ["default-src", "'self'"],
   [
@@ -25,7 +34,9 @@ const cspDirectives = [
   ["style-src", "'self'", "'unsafe-inline'"],
   ["img-src", "'self'", "blob:", "data:"],
   ["font-src", "'self'", "data:"],
-  ["connect-src", "'self'", supabaseOrigin, supabaseRealtimeOrigin].filter(Boolean),
+  ["connect-src", "'self'", supabaseOrigin, supabaseRealtimeOrigin].filter(
+    Boolean,
+  ),
   ["media-src", "'self'"],
   ["worker-src", "'self'", "blob:"],
   ["object-src", "'none'"],
@@ -49,6 +60,23 @@ const nextConfig: NextConfig = {
     },
   },
   poweredByHeader: false,
+  // PostHog endpoints use trailing slashes; without this Next would redirect
+  // them and drop the POST body.
+  skipTrailingSlashRedirect: true,
+  async rewrites() {
+    if (!posthogHost || !posthogAssetsHost) return [];
+    return [
+      {
+        source: "/ingest/static/:path*",
+        destination: `${posthogAssetsHost}/static/:path*`,
+      },
+      {
+        source: "/ingest/array/:path*",
+        destination: `${posthogAssetsHost}/array/:path*`,
+      },
+      { source: "/ingest/:path*", destination: `${posthogHost}/:path*` },
+    ];
+  },
   async headers() {
     return [
       {

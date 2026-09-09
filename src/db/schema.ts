@@ -34,7 +34,10 @@ export const blueprints = pgTable(
     index("blueprints_owner_id_idx").on(t.ownerId),
     index("blueprints_owner_updated_idx").on(t.ownerId, t.updatedAt),
   ],
-);
+  // Closes the table to Supabase's REST API (PostgREST). The app connects as
+  // the table owner through DATABASE_URL, which bypasses RLS, so owner checks
+  // in src/server/data remain the runtime authorization boundary.
+).enableRLS();
 
 export const blueprintVersions = pgTable(
   "blueprint_versions",
@@ -57,7 +60,7 @@ export const blueprintVersions = pgTable(
     index("blueprint_versions_blueprint_idx").on(t.blueprintId),
     index("blueprint_versions_blueprint_created_idx").on(t.blueprintId, t.createdAt),
   ],
-);
+).enableRLS();
 
 export const blueprintsRelations = relations(blueprints, ({ many }) => ({
   versions: many(blueprintVersions),

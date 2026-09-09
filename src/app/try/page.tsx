@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { EditorWorkspace } from "@/components/editor-workspace";
+import { ogImage } from "@/lib/og-image";
 
 export const metadata: Metadata = {
   title: { absolute: "Try blueprint1 — paste PostgreSQL, see your ERD" },
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     url: "/try",
     title: "Try blueprint1 — paste PostgreSQL, see your ERD",
     description: "Paste PostgreSQL DDL and see your ERD instantly. No sign-up.",
+    images: [ogImage],
   },
 };
 

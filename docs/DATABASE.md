@@ -113,9 +113,12 @@ where blueprints.id = blueprintId
   and blueprints.owner_id = userId
 ```
 
-The app uses Drizzle with a direct Postgres connection, so Supabase Row Level
-Security is not the runtime authorization boundary. RLS may be added later as
-defense-in-depth, but application-level owner checks remain required.
+The app uses Drizzle with a direct Postgres connection as the table owner, so
+Supabase Row Level Security is not the runtime authorization boundary. RLS is
+enabled on both tables with no policies, and REST grants for `anon` and
+`authenticated` are revoked, purely to close the Supabase REST API. Policies
+may be added later as defense-in-depth, but application-level owner checks
+remain required.
 
 ## Drafts And Versions
 

@@ -139,4 +139,4 @@ pnpm exec tsc --noEmit
 - PostgreSQL DDL is the primary supported input.
 - Public share links are unlisted, but anyone with the link can view the latest saved version.
 - Dedicated rate limiting is not implemented yet.
-- Supabase RLS is not the runtime authorization boundary because the app uses a direct Postgres connection through Drizzle.
+- Supabase RLS is not the runtime authorization boundary because the app uses a direct Postgres connection through Drizzle. It is still enabled, with no policies and REST grants revoked, to keep both tables out of Supabase's auto-generated REST API.

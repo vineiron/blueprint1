@@ -31,11 +31,16 @@ access layer, usually as `where owner_id = userId`.
 ### Database
 
 The app uses Drizzle with `postgres-js` through `DATABASE_URL`. This direct
-connection bypasses Supabase RLS. The app must not rely on RLS to protect
-runtime data access.
+connection runs as the table owner and bypasses Supabase RLS, so the app must
+not rely on RLS to protect runtime data access.
 
-RLS can still be added later as defense-in-depth for other access paths, but it
-does not replace application-level owner checks.
+RLS is still enabled on `blueprints` and `blueprint_versions`, with no
+policies, and the `anon` and `authenticated` roles have their table grants
+revoked (migration `0003_blueprints_rls`). That closes both tables to
+Supabase's auto-generated REST API, which would otherwise expose every row,
+including private drafts, to anyone holding the publishable key. It is a
+second door being locked, not the authorization boundary for the app's own
+queries.
 
 ## Data Visibility
 
@@ -112,5 +117,4 @@ would increase secret leak risk and is unnecessary for the current architecture.
 - Dedicated rate limiting is not implemented yet.
 - CSP should still be validated against the real deployed OAuth and Supabase
   flow before treating it as final.
-- Supabase RLS is not configured as defense-in-depth yet.
 - Automated tests for Server Actions and full route behavior should be expanded.

@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { AutoLayoutDemo } from "@/components/auto-layout-demo";
 import { ShowcaseLive } from "@/components/showcase-live";
 import { SignInButton } from "@/components/sign-in-button";
+import { ogImage } from "@/lib/og-image";
 import { getCurrentUser } from "@/server/auth";
 
 export const metadata: Metadata = {
@@ -28,6 +29,7 @@ export const metadata: Metadata = {
     title: "blueprint1: Turn PostgreSQL DDL into shareable ERDs",
     description:
       "Paste PostgreSQL DDL and get an interactive, versioned, shareable entity-relationship diagram.",
+    images: [ogImage],
   },
 };
 

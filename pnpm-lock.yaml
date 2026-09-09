@@ -64,6 +64,12 @@ importers:
       postgres:
         specifier: ^3.4.9
         version: 3.4.9
+      posthog-js:
+        specifier: ^1.428.7
+        version: 1.428.7(@types/react@19.2.17)(react@19.2.7)
+      posthog-node:
+        specifier: ^5.51.7
+        version: 5.51.7
       radix-ui:
         specifier: ^1.6.2
         version: 1.6.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -850,6 +856,15 @@ packages:
 
   '@oxc-project/types@0.133.0':
     resolution: {integrity: sha512-KzkdCd6Uxqnf6l3HOw1xfatAlUURA0g14cvBYFyJ5SaNOQbOUvBr9PKArcPcrNIeRsBdgcUzOGrhKveVpvOIGA==}
+
+  '@posthog/browser-common@0.8.2':
+    resolution: {integrity: sha512-8g7+ijrx8bfWmpDjmP07e0ZmdRnJoFqZ6PCcMQvfBTUrr422GRXvQWpQn7yD028zIJHIIn/rUTipKgUC5UkWpw==}
+
+  '@posthog/core@1.51.0':
+    resolution: {integrity: sha512-LilmmtjcrjV1LgaVNQXrAUt4IXcWIYMrwEtx6VJUUFDeBBdmeI99jshKGtAWugYeB3Wkcp9xQIVCrxIYRpNiRA==}
+
+  '@posthog/types@1.409.2':
+    resolution: {integrity: sha512-hZ4EXZ1+BstMaxUkmAEg3qvgMR/S00Xb+wEwY/Tx2Dr9dBgiBWrERxaq2UwICh/Fh/vVXpKZT/0SkRtO8JKQ2A==}
 
   '@radix-ui/number@1.1.2':
     resolution: {integrity: sha512-ceTwaxc4I5IOi97DgCotl3pqiyRGvffcc0oOsE2dQYaJOFIDsDt4VWG6xEbg1QePv9QWausCEIppud/tJ1wNig==}
@@ -1810,6 +1825,9 @@ packages:
   '@types/react@19.2.17':
     resolution: {integrity: sha512-MXfmqaVPEVgkBT/aY0aGCkRWWtByiYQXo3xdQ8r5RzuFrPiRn8Gar2tQdXSUQ2GKV3bkXckek89V8wQBY2Q/Aw==}
 
+  '@types/trusted-types@2.0.7':
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+
   '@uiw/codemirror-extensions-basic-setup@4.25.11':
     resolution: {integrity: sha512-otyFa+n9IOYtEjaKOxPedHkj15fTPUF21wdR9pv0GpZPfuGl27cvmcv6+tognbRu9VvEcsHKE+ESoszeo3KfTw==}
     peerDependencies:
@@ -1911,6 +1929,9 @@ packages:
     resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
     engines: {node: '>=18'}
 
+  core-js@3.50.0:
+    resolution: {integrity: sha512-BRWgOLKkFeCgRudR6zrs8p9XJZcE14grzKMMssoYrk6krtuEZ7MTKPIY5RzOnqsEKIR9kst7wNzphttraT+Yqw==}
+
   crelt@1.0.7:
     resolution: {integrity: sha512-aK6BbWfhf4U/wCcLHKPJl/xa6VkVstRaPywWtMKGwuOLc/wZTyQYuoxgvZnNsBvv7Kg3YTBQYYBCggcviQczuA==}
 
@@ -1964,6 +1985,9 @@ packages:
 
   discontinuous-range@1.0.0:
     resolution: {integrity: sha512-c68LpLbO+7kP/b1Hr1qs8/BJ09F5khZGTxqxZuhzxpmwJKOgRFHJWIb9/KmqnqHhLdO55aOxFH/EGBvUQbL/RQ==}
+
+  dompurify@3.4.15:
+    resolution: {integrity: sha512-EUBjM+B+lkDE41iE82DDSCfkoPGfXx8IxFxPMjNzm/Uk4xDet77rTN9wqlxlVg71kK7XGuUMv6wUxJUwwv+Xyw==}
 
   drizzle-kit@0.31.10:
     resolution: {integrity: sha512-7OZcmQUrdGI+DUNNsKBn1aW8qSoKuTH7d0mYgSP8bAzdFzKoovxEFnoGQp2dVs82EOJeYycqRtciopszwUf8bw==}
@@ -2096,6 +2120,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  fflate@0.4.9:
+    resolution: {integrity: sha512-zdxgIEddhfsyCaWpJ2SdXEP8ZMrKJ6+5jl4OupODcywU0IhRk6gdXuVGcPICyfx2H97hVK7xmJtRLPjkxAX8Vw==}
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -2342,6 +2369,37 @@ packages:
   postgres@3.4.9:
     resolution: {integrity: sha512-GD3qdB0x1z9xgFI6cdRD6xu2Sp2WCOEoe3mtnyB5Ee0XrrL5Pe+e4CCnJrRMnL1zYtRDZmQQVbvOttLnKDLnaw==}
     engines: {node: '>=12'}
+
+  posthog-js@1.428.7:
+    resolution: {integrity: sha512-ztFOoipQ1eOEl1xkkEldy1x8TEPKhNRb6ZZbuODoXqILqcHgHCUF1hATENY36HBuSV7TwXq16pQ3QYYI1rBCuQ==}
+    peerDependencies:
+      '@types/react': '>=16.8.0'
+      react: '>=16.8.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+
+  posthog-node@5.51.7:
+    resolution: {integrity: sha512-QzUQ0S7afLIivL1mQvZ1qv3/o179ds1Zze7Zf4JDhjVlJ1mFTyu42cwFQHrD0VQpPXhIVKOq7AvSrF8Bt8yonQ==}
+    engines: {node: ^20.20.0 || >=22.22.0}
+    peerDependencies:
+      rxjs: ^7.0.0
+    peerDependenciesMeta:
+      rxjs:
+        optional: true
+
+  preact@10.29.8:
+    resolution: {integrity: sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==}
+    peerDependencies:
+      preact-render-to-string: '>=5'
+    peerDependenciesMeta:
+      preact-render-to-string:
+        optional: true
+
+  query-selector-shadow-dom@1.0.1:
+    resolution: {integrity: sha512-lT5yCqEBgfoMYpf3F2xQRK7zEr1rhIIZuceDK6+xRkJQ4NMbHTwXqk4NkwDwQMNqXgG9r9fyHnzwNVs6zV5KRw==}
 
   radix-ui@1.6.2:
     resolution: {integrity: sha512-OwYUjzMwiInCUxgAWpPsavXC3Kh4iyi/49uU1/qZTG3RQDlvegyk1GOMiGvSkjua1RDb3JD3fo3eroL9FV4GQw==}
@@ -2637,6 +2695,9 @@ packages:
 
   w3c-keyname@2.2.8:
     resolution: {integrity: sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ==}
+
+  web-vitals@6.2.1:
+    resolution: {integrity: sha512-rLcLXA2sx6+9dE88NHFubwTtGxpK4yYBLj6qHPdFoCaLr0cXGb4efOqtKLlm4loGA4OEKHIQKMKzZkKyOh5ctw==}
 
   why-is-node-running@2.3.0:
     resolution: {integrity: sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w==}
@@ -3181,6 +3242,17 @@ snapshots:
     optional: true
 
   '@oxc-project/types@0.133.0': {}
+
+  '@posthog/browser-common@0.8.2':
+    dependencies:
+      '@posthog/core': 1.51.0
+      '@posthog/types': 1.409.2
+
+  '@posthog/core@1.51.0':
+    dependencies:
+      '@posthog/types': 1.409.2
+
+  '@posthog/types@1.409.2': {}
 
   '@radix-ui/number@1.1.2': {}
 
@@ -4138,6 +4210,9 @@ snapshots:
     dependencies:
       csstype: 3.2.3
 
+  '@types/trusted-types@2.0.7':
+    optional: true
+
   '@uiw/codemirror-extensions-basic-setup@4.25.11(@codemirror/autocomplete@6.20.3)(@codemirror/commands@6.10.4)(@codemirror/language@6.12.4)(@codemirror/lint@6.9.7)(@codemirror/search@6.7.0)(@codemirror/state@6.7.1)(@codemirror/view@6.43.6)':
     dependencies:
       '@codemirror/autocomplete': 6.20.3
@@ -4243,6 +4318,8 @@ snapshots:
 
   cookie@1.1.1: {}
 
+  core-js@3.50.0: {}
+
   crelt@1.0.7: {}
 
   csstype@3.2.3: {}
@@ -4288,6 +4365,10 @@ snapshots:
   detect-node-es@1.1.0: {}
 
   discontinuous-range@1.0.0: {}
+
+  dompurify@3.4.15:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
 
   drizzle-kit@0.31.10:
     dependencies:
@@ -4376,6 +4457,8 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
       picomatch: 4.0.7
+
+  fflate@0.4.9: {}
 
   fsevents@2.3.3:
     optional: true
@@ -4564,6 +4647,32 @@ snapshots:
       source-map-js: 1.2.1
 
   postgres@3.4.9: {}
+
+  posthog-js@1.428.7(@types/react@19.2.17)(react@19.2.7):
+    dependencies:
+      '@posthog/browser-common': 0.8.2
+      '@posthog/core': 1.51.0
+      '@posthog/types': 1.409.2
+      core-js: 3.50.0
+      dompurify: 3.4.15
+      fflate: 0.4.9
+      preact: 10.29.8
+      query-selector-shadow-dom: 1.0.1
+      web-vitals: 6.2.1
+      web-vitals-soft-navs: web-vitals@6.2.1
+    optionalDependencies:
+      '@types/react': 19.2.17
+      react: 19.2.7
+    transitivePeerDependencies:
+      - preact-render-to-string
+
+  posthog-node@5.51.7:
+    dependencies:
+      '@posthog/core': 1.51.0
+
+  preact@10.29.8: {}
+
+  query-selector-shadow-dom@1.0.1: {}
 
   radix-ui@1.6.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
@@ -4853,6 +4962,8 @@ snapshots:
       - msw
 
   w3c-keyname@2.2.8: {}
+
+  web-vitals@6.2.1: {}
 
   why-is-node-running@2.3.0:
     dependencies:

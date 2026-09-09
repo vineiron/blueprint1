@@ -1,5 +1,6 @@
 "use client";
 
+import posthog from "posthog-js";
 import { useEffect } from "react";
 
 /**
@@ -16,6 +17,7 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     console.error(error);
+    posthog.captureException(error);
   }, [error]);
 
   return (
@@ -33,7 +35,9 @@ export default function GlobalError({
         }}
       >
         <div style={{ maxWidth: 420, textAlign: "center", padding: 24 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 600 }}>Something went wrong</h2>
+          <h2 style={{ fontSize: 18, fontWeight: 600 }}>
+            Something went wrong
+          </h2>
           <p style={{ marginTop: 8, color: "#64748b", fontSize: 14 }}>
             A critical error occurred. Please try again.
           </p>
